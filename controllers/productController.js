@@ -13,32 +13,33 @@ exports.getAllProducts = async (req, res) => {
 // Ajouter un produit
 exports.addProduct = async (req, res) => {
     try {
-      const { title, prix, marque, dispo, promo } = req.body;
-  
-      // Check if files are uploaded
-      if (!req.files || !req.files['image'] || !req.files['logoUrl']) {
-        return res.status(400).json({ message: "Les images du produit et du logo sont requises" });
-      }
-  
-      // Create a new product
-      const product = new Product({
-        title,
-        prix,
-        marque,
-        dispo,
-        promo,
-        image: req.files['image'][0].filename,
-        logoUrl: req.files['logoUrl'][0].filename,
-        user: req.body.user ? { idUser: req.body.user.idUser } : undefined,
-      });
-  
-      await product.save();
-      res.status(201).json({ message: 'Produit ajouté avec succès', product });
+        const { title, prix, marque, dispo, promo } = req.body;
+
+        // Check if both image and logo are uploaded
+        if (!req.files || !req.files['image'] || !req.files['logoUrl']) {
+            return res.status(400).json({ message: "Les images du produit et du logo sont requises" });
+        }
+
+        // Create a new product with the received data
+        const product = new Product({
+            title,
+            prix,
+            marque,
+            dispo,
+            promo,
+            image: req.files['image'][0].filename, // Save image filename
+            logoUrl: req.files['logoUrl'][0].filename, // Save logo filename
+            user: req.body.user ? { idUser: req.body.user.idUser } : undefined // Make this field optional
+        });
+
+        // Save the product in the database
+        await product.save();
+        res.status(201).json({ message: 'Produit ajouté avec succès', product });
     } catch (error) {
-      console.error("Erreur lors de l'ajout du produit:", error); // Log the error
-      res.status(500).json({ message: "Erreur interne du serveur", error });
+        res.status(500).json({ message: "Erreur lors de l'ajout du produit", error });
     }
-  };
+};
+
   
   
   
