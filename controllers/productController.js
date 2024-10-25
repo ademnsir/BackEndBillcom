@@ -15,30 +15,31 @@ exports.addProduct = async (req, res) => {
     try {
       const { title, prix, marque, dispo, promo } = req.body;
   
-      // Vérifier si les images ont été téléchargées
+      // Check if files are uploaded
       if (!req.files || !req.files['image'] || !req.files['logoUrl']) {
         return res.status(400).json({ message: "Les images du produit et du logo sont requises" });
       }
   
-      // Créer un nouveau produit avec les données reçues
+      // Create a new product
       const product = new Product({
         title,
         prix,
         marque,
         dispo,
         promo,
-        image: req.files['image'][0].filename, // Sauvegarder le nom de fichier de l'image du produit
-        logoUrl: req.files['logoUrl'][0].filename, // Sauvegarder le nom de fichier du logo
-        user: req.body.user ? { idUser: req.body.user.idUser } : undefined // Rendre le champ facultatif
+        image: req.files['image'][0].filename,
+        logoUrl: req.files['logoUrl'][0].filename,
+        user: req.body.user ? { idUser: req.body.user.idUser } : undefined,
       });
   
-      // Enregistrer le produit dans la base de données
       await product.save();
       res.status(201).json({ message: 'Produit ajouté avec succès', product });
     } catch (error) {
-      res.status(500).json({ message: "Erreur lors de l'ajout du produit", error });
+      console.error("Erreur lors de l'ajout du produit:", error); // Log the error
+      res.status(500).json({ message: "Erreur interne du serveur", error });
     }
   };
+  
   
   
 
