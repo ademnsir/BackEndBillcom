@@ -35,9 +35,11 @@ const ProductSchema = new mongoose.Schema({
   },
   subcategory: {
     type: String, // Sous-catégorie (ex: "Mouse", "Headset", etc.)
+    required: true,
   },
   type: {
-    type: String, // Type de catégorie principale (ex: "gaming", "accessories", etc.)
+    type: String,
+    required: true, // Type de catégorie principale (ex: "gaming", "accessories", etc.)
   },
   user: {
     idUser: {
