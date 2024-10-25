@@ -10,7 +10,8 @@ const ProductSchema = new mongoose.Schema({
     required: true,
   },
   logoUrl: {
-    type: String, // URL du logo de la marque
+    type: String,
+    required: true, // URL du logo de la marque
   },
   prix: {
     type: Number,
