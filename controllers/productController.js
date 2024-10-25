@@ -13,19 +13,17 @@ exports.getAllProducts = async (req, res) => {
 // Ajouter un produit
 exports.addProduct = async (req, res) => {
     try {
-      const { title, prix, marque, dispo, promo, subcategory, type, user } = req.body;
+      const { title, prix, marque, dispo, promo, user } = req.body;
   
-      // Crée un nouveau produit et stocke le nom de l'image téléchargée
+      // Crée un nouveau produit avec le fichier image
       const newProduct = new Product({
         title,
-        image: req.file ? req.file.filename : '', // Nom du fichier image stocké par Multer
+        image: req.file ? req.file.filename : '', // Gère le fichier image
         prix,
         marque,
         dispo,
         promo,
-        subcategory,
-        type,
-        user
+        user: { idUser: user.idUser } // Assigner l'idUser
       });
   
       const savedProduct = await newProduct.save();
@@ -34,6 +32,7 @@ exports.addProduct = async (req, res) => {
       res.status(500).json({ message: 'Erreur lors de l\'ajout du produit', error });
     }
   };
+  
   
 
 // Récupérer un produit par ID
