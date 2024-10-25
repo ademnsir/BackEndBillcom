@@ -15,35 +15,27 @@ exports.addProduct = async (req, res) => {
     try {
       const { title, prix, marque, dispo, promo, user } = req.body;
   
-      // Vérification si un fichier est bien téléchargé
+      // Vérifier si une image a été téléchargée
       if (!req.file) {
         return res.status(400).json({ message: "L'image du produit est requise" });
       }
   
-      // Création du nouveau produit avec l'image
-      const newProduct = new Product({
+      // Créer un nouveau produit avec les données reçues
+      const product = new Product({
         title,
         prix,
         marque,
         dispo,
         promo,
         user,
-        image: req.file.filename // Utilise le nom de fichier généré par Multer
+        image: req.file.filename // Sauvegarder le nom de fichier de l'image
       });
   
-      const product = await newProduct.save();
-  
-      res.status(201).json({
-        success: true,
-        message: 'Produit ajouté avec succès',
-        product
-      });
+      // Enregistrer le produit dans la base de données
+      await product.save();
+      res.status(201).json({ message: 'Produit ajouté avec succès', product });
     } catch (error) {
-      console.error('Erreur lors de l\'ajout du produit:', error);
-      res.status(500).json({
-        message: "Erreur lors de l'ajout du produit",
-        error
-      });
+      res.status(500).json({ message: "Erreur lors de l'ajout du produit", error });
     }
   };
   
