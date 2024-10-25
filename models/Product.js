@@ -42,7 +42,7 @@ const ProductSchema = new mongoose.Schema({
     idUser: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User', // Référence à l'utilisateur qui a ajouté le produit
-      required: true,
+      required: false,
     },
     profilePicture: String,
     ville: String,
