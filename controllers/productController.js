@@ -15,32 +15,32 @@ exports.addProduct = async (req, res) => {
     try {
       const { title, prix, marque, dispo, promo, type, subcategory } = req.body;
   
-      // Vérifier si les fichiers image et logo sont bien téléchargés
+      // Check if the product image and logo have been uploaded
       if (!req.files || !req.files['image'] || !req.files['logoUrl']) {
-        return res.status(400).json({ message: "Les images du produit et du logo sont requises" });
+        return res.status(400).json({ message: "Both product image and brand logo are required." });
       }
   
-      // Créer un nouveau produit avec les données reçues
+      // Create a new product object
       const product = new Product({
         title,
         prix,
         marque,
         dispo,
         promo,
-        type,  // Ajout du champ `type`
-        subcategory, // Ajout du champ `subcategory`
-        image: req.files['image'][0].filename, // Sauvegarder le nom de fichier de l'image
-        logoUrl: req.files['logoUrl'][0].filename, // Sauvegarder le nom de fichier du logo
-        user: req.body.user ? { idUser: req.body.user.idUser } : undefined // Champ facultatif pour l'utilisateur
+        type,  // Category type (e.g., "gaming")
+        subcategory, // Subcategory (e.g., "Headset")
+        image: req.files['image'][0].filename, // Save the filename for the product image
+        logoUrl: req.files['logoUrl'][0].filename, // Save the filename for the brand logo
       });
   
-      // Enregistrer le produit dans la base de données
+      // Save the product to the database
       await product.save();
-      res.status(201).json({ message: 'Produit ajouté avec succès', product });
+      res.status(201).json({ message: 'Product added successfully', product });
     } catch (error) {
-      res.status(500).json({ message: "Erreur lors de l'ajout du produit", error });
+      res.status(500).json({ message: "Error while adding the product", error });
     }
   };
+  
   
   
   
