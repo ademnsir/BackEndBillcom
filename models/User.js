@@ -3,20 +3,49 @@ const mongoose = require("mongoose");
 const UserSchema = new mongoose.Schema({
   nom: {
     type: String,
+    required: true, // Assurez-vous que le champ est obligatoire si nécessaire
   },
   prenom: {
     type: String,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
   },
   email: {
     type: String,
+    required: true,
+    unique: true, // L'email doit être unique
   },
-  datenaissance: {
+  confirmPassword: {
+    type: String,
+    required: true,
+  },
+  pays: {
+    type: String,
+  },
+  adresse: {
+    type: String,
+  },
+  codePostal: {
     type: String,
   },
   telephone: {
     type: String,
   },
-  adresse: {
+  checkbox: {
+    type: Boolean,
+    default: true, // Par défaut à true si coché
+  },
+  type: {
+    type: String,
+    default: "Utilisateur", // Par défaut à "Utilisateur"
+  },
+  genre: {
+    type: String,
+  },
+  dateNaissance: {
     type: String,
   }
 });
