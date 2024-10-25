@@ -34,29 +34,20 @@ const upload = multer({
   fileFilter: fileFilter
 });
 
-// Route pour obtenir tous les produits
-router.get('/products', productController.getAllProducts);
-
-
 // Route pour ajouter un produit avec une image
-// Utilise `upload.single('image')` pour gérer un fichier avec le nom de champ 'image'
+// Utilise `upload.fields()` pour gérer plusieurs fichiers avec les noms de champ 'image' et 'logoUrl'
 router.post('/products', upload.fields([
-    { name: 'image', maxCount: 1 }, // Upload the main product image
-    { name: 'logoUrl', maxCount: 1 } // Upload the logo
-  ]), productController.addProduct);
-  
+  { name: 'image', maxCount: 1 },   // Upload for main product image
+  { name: 'logoUrl', maxCount: 1 }  // Upload for brand logo
+]), productController.addProduct);
 
-
-
-
-// Route pour obtenir un produit par ID
+// Autres routes produits
+router.get('/products', productController.getAllProducts);
 router.get('/products/:id', productController.getProductById);
-
-// Route pour mettre à jour un produit par ID
-router.put('/products/:id', upload.single('image'), productController.updateProduct);
-
-
-// Route pour supprimer un produit par ID
+router.put('/products/:id', upload.fields([
+  { name: 'image', maxCount: 1 },   // Upload for main product image
+  { name: 'logoUrl', maxCount: 1 }  // Upload for brand logo
+]), productController.updateProduct);
 router.delete('/products/:id', productController.deleteProduct);
 
 module.exports = router;

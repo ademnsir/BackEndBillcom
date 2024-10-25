@@ -13,33 +13,35 @@ exports.getAllProducts = async (req, res) => {
 // Ajouter un produit
 exports.addProduct = async (req, res) => {
     try {
-        const { title, prix, marque, dispo, promo } = req.body;
-
-        // Check if both image and logo are uploaded
-        if (!req.files || !req.files['image'] || !req.files['logoUrl']) {
-            return res.status(400).json({ message: "Les images du produit et du logo sont requises" });
-        }
-
-        // Create a new product with the received data
-        const product = new Product({
-            title,
-            prix,
-            marque,
-            dispo,
-            promo,
-            image: req.files['image'][0].filename, // Save image filename
-            logoUrl: req.files['logoUrl'][0].filename, // Save logo filename
-            user: req.body.user ? { idUser: req.body.user.idUser } : undefined // Make this field optional
-        });
-
-        // Save the product in the database
-        await product.save();
-        res.status(201).json({ message: 'Produit ajouté avec succès', product });
+      const { title, prix, marque, dispo, promo, type, subcategory } = req.body;
+  
+      // Vérifier si les fichiers image et logo sont bien téléchargés
+      if (!req.files || !req.files['image'] || !req.files['logoUrl']) {
+        return res.status(400).json({ message: "Les images du produit et du logo sont requises" });
+      }
+  
+      // Créer un nouveau produit avec les données reçues
+      const product = new Product({
+        title,
+        prix,
+        marque,
+        dispo,
+        promo,
+        type,  // Ajout du champ `type`
+        subcategory, // Ajout du champ `subcategory`
+        image: req.files['image'][0].filename, // Sauvegarder le nom de fichier de l'image
+        logoUrl: req.files['logoUrl'][0].filename, // Sauvegarder le nom de fichier du logo
+        user: req.body.user ? { idUser: req.body.user.idUser } : undefined // Champ facultatif pour l'utilisateur
+      });
+  
+      // Enregistrer le produit dans la base de données
+      await product.save();
+      res.status(201).json({ message: 'Produit ajouté avec succès', product });
     } catch (error) {
-        res.status(500).json({ message: "Erreur lors de l'ajout du produit", error });
+      res.status(500).json({ message: "Erreur lors de l'ajout du produit", error });
     }
-};
-
+  };
+  
   
   
   
