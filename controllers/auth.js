@@ -113,3 +113,41 @@ exports.getUserByEmail = async (req, res, next) => {
         res.status(500).json({ success: false, message: "Erreur lors de la récupération de l'utilisateur" });
     }
 };
+
+
+exports.signIn = async (req, res, next) => {
+    const { email, password } = req.body;
+
+    try {
+        // Vérifier si l'utilisateur existe
+        const user = await User.findOne({ email: email.toLowerCase() });
+        if (!user) {
+            return res.status(404).json({ success: false, message: "Utilisateur non trouvé" });
+        }
+
+        // Vérification du mot de passe
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ success: false, message: "Mot de passe incorrect" });
+        }
+
+        // Renvoyer les informations utilisateur sans mot de passe
+        res.status(200).json({
+            success: true,
+            message: "Connexion réussie",
+            user: {
+                id: user._id,
+                nom: user.nom,
+                prenom: user.prenom,
+                email: user.email,
+                type: user.type,
+                genre: user.genre,
+                dateNaissance: user.dateNaissance
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        next(error);
+        res.status(500).json({ success: false, message: "Erreur lors de la connexion" });
+    }
+};
