@@ -16,13 +16,17 @@ exports.addProduct = async (req, res) => {
     const { title, prix, marque, dispo, promo, type, subcategory } = req.body;
 
     // Vérifier si les fichiers image et logo sont bien téléchargés
-    if (!req.files || !req.files['image'] || !req.files['logoUrl']) {
-      return res.status(400).json({ message: "Les images du produit et du logo sont requises" });
+    if (!req.files || !req.files['image'] || !req.files['logoUrl'] || !req.files['img1'] || !req.files['img2'] || !req.files['img3'] || !req.files['img4']) {
+      return res.status(400).json({ message: "Toutes les images du produit et le logo sont requis" });
     }
 
     // Récupérer les noms des fichiers image et logo (vrais noms)
     const imageFileName = req.files['image'][0].originalname;
     const logoFileName = req.files['logoUrl'][0].originalname;
+    const img1FileName = req.files['img1'][0].originalname;
+    const img2FileName = req.files['img2'][0].originalname;
+    const img3FileName = req.files['img3'][0].originalname;
+    const img4FileName = req.files['img4'][0].originalname;
 
     // Créer un nouveau produit avec les données reçues et les noms de fichiers
     const product = new Product({
@@ -33,8 +37,12 @@ exports.addProduct = async (req, res) => {
       promo,
       type,
       subcategory,
-      image: imageFileName,  // Sauvegarder le vrai nom de fichier de l'image
+      image: imageFileName,  // Sauvegarder le vrai nom de fichier de l'image principale
       logoUrl: logoFileName, // Sauvegarder le vrai nom de fichier du logo
+      img1: img1FileName,    // Sauvegarder le nom des images supplémentaires
+      img2: img2FileName,
+      img3: img3FileName,
+      img4: img4FileName,
       user: req.body.user ? { idUser: req.body.user.idUser } : undefined  // Optionnel : l'utilisateur qui a ajouté le produit
     });
 
