@@ -10,12 +10,18 @@ const ProductSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-
+  
   videoUrl: {
     type: String,
     required: true,
   },
-  
+
+  shortDesc: {
+    type: String,
+    required: true,
+  },
+
+
   image: {
     type: String, // Chemin de l'image stockée
     required: true,

@@ -13,7 +13,7 @@ exports.getAllProducts = async (req, res) => {
 // Ajouter un produit
 exports.addProduct = async (req, res) => {
   try {
-    const { title, prix, marque, dispo, promo, type, subcategory, description ,videoUrl } = req.body;
+    const { title, prix, marque, dispo, promo, type, subcategory, description ,videoUrl ,shortDesc} = req.body;
 
     // Vérifier si les fichiers image et logo sont bien téléchargés
     if (!req.files || !req.files['image'] || !req.files['logoUrl'] || !req.files['img1'] || !req.files['img2'] || !req.files['img3'] || !req.files['img4']) {
@@ -38,7 +38,8 @@ exports.addProduct = async (req, res) => {
       type,
       subcategory,
       description, 
-      videoUrl, // Ajouter la description ici
+      videoUrl,
+      shortDesc, // Ajouter la description ici
       image: imageFileName,  // Sauvegarder le vrai nom de fichier de l'image principale
       logoUrl: logoFileName, // Sauvegarder le vrai nom de fichier du logo
       img1: img1FileName,    // Sauvegarder le nom des images supplémentaires
