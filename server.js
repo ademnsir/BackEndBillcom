@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors'); 
 const connectDB = require("./config/db");
-const multer = require('multer'); // Pour gérer les uploads de fichiers
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const port = 3001;
@@ -26,34 +26,18 @@ app.use("/auth", AuthRoute);
 // Utilisation des routes pour les produits
 app.use("/tp/api", productRoutes);  // Définir un préfixe commun pour toutes les routes produits
 
-app.use('/uploads', express.static(path.join(__dirname, 'C:/Users/adem/Desktop/uploads')));
+// Chemin absolu vers le dossier "uploads"
+const uploadPath = path.join(__dirname, '../../Desktop/uploads');
 
+// Vérifier si le répertoire existe, sinon le créer
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath, { recursive: true });
+}
+
+// Servir les fichiers statiques depuis le dossier 'uploads'
+app.use('/uploads', express.static(uploadPath));
 
 // Démarrer le serveur
 app.listen(port, () => {
   console.log(`Serveur en cours d'exécution à http://localhost:${port}`);
 });
-
-// Configuration de multer pour les uploads d'images
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Chemin du dossier où les images seront stockées
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Nom du fichier avec un timestamp
-  },
-});
-
-const upload = multer({ storage });
-
-// Route pour télécharger des images de produits
-app.post('/upload', upload.single('image'), (req, res) => {
-  try {
-    res.status(200).json({ fileName: req.file.filename, message: 'Image uploadée avec succès' });
-  } catch (error) {
-    res.status(400).json({ error: 'Erreur lors de l\'upload de l\'image' });
-  }
-});
-
-// Servir les fichiers statiques pour les images
-app.use('/uploads', express.static('uploads'));
