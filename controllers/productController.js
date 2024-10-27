@@ -13,10 +13,29 @@ exports.getAllProducts = async (req, res) => {
 // Ajouter un produit
 exports.addProduct = async (req, res) => {
   try {
-    const { title, prix, marque, dispo, promo, type, subcategory } = req.body;
+    const { 
+      title, 
+      prix, 
+      marque, 
+      dispo, 
+      promo, 
+      type, 
+      subcategory, 
+      description, 
+      videoUrl, 
+      shortDesc 
+    } = req.body;
 
     // Vérifier si les fichiers image et logo sont bien téléchargés
-    if (!req.files || !req.files['image'] || !req.files['logoUrl'] || !req.files['img1'] || !req.files['img2'] || !req.files['img3'] || !req.files['img4']) {
+    if (
+      !req.files || 
+      !req.files['image'] || 
+      !req.files['logoUrl'] || 
+      !req.files['img1'] || 
+      !req.files['img2'] || 
+      !req.files['img3'] || 
+      !req.files['img4']
+    ) {
       return res.status(400).json({ message: "Toutes les images du produit et le logo sont requis" });
     }
 
@@ -31,6 +50,11 @@ exports.addProduct = async (req, res) => {
     // Logique de promo: Si le champ 'promo' n'est pas fourni, le produit n'est pas en promotion (promo = 0)
     const productPromo = promo ? promo : 0;
 
+    // Vérifier si l'image pour les produits en promo est fournie, sinon elle sera undefined
+    const imgProduitenPromoFileName = req.files['imgProduitenPromo'] 
+      ? req.files['imgProduitenPromo'][0].originalname.toLowerCase() 
+      : undefined;
+
     // Créer un nouveau produit avec les données reçues et les noms de fichiers
     const product = new Product({
       title,
@@ -40,12 +64,16 @@ exports.addProduct = async (req, res) => {
       promo: productPromo,  // Assurez-vous que promo est soit une valeur fournie soit 0 par défaut
       type,
       subcategory,
+      description,
+      videoUrl,
+      shortDesc,
       image: imageFileName,  // Sauvegarder en minuscule pour uniformité
       logoUrl: logoFileName, // Sauvegarder en minuscule pour uniformité
       img1: img1FileName,
       img2: img2FileName,
       img3: img3FileName,
       img4: img4FileName,
+      imgProduitenPromo: imgProduitenPromoFileName,  // Optionnel : image spécifique pour les produits en promo
       user: req.body.user ? { idUser: req.body.user.idUser } : undefined  // Optionnel : l'utilisateur qui a ajouté le produit
     });
 
@@ -57,6 +85,7 @@ exports.addProduct = async (req, res) => {
     res.status(500).json({ message: "Erreur lors de l'ajout du produit", error });
   }
 };
+
 
 
 
