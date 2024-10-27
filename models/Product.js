@@ -9,6 +9,29 @@ const ProductSchema = new mongoose.Schema({
     type: String, // Chemin de l'image stockée
     required: true,
   },
+
+  img1: {
+    type: String, // Chemin de l'image stockée
+    required: true,
+  },
+
+  img2: {
+    type: String, // Chemin de l'image stockée
+    required: true,
+  },
+
+
+  img3: {
+    type: String, // Chemin de l'image stockée
+    required: true,
+  },
+
+  img4: {
+    type: String, // Chemin de l'image stockée
+    required: true,
+  },
+
+  
   logoUrl: {
     type: String,
     required: true, // URL du logo de la marque
