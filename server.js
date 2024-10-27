@@ -26,26 +26,25 @@ app.use("/auth", AuthRoute);
 // Utilisation des routes pour les produits
 app.use("/tp/api", productRoutes);  // Définir un préfixe commun pour toutes les routes produits
 
-app.use('/uploads', express.static(path.join(__dirname, 'C:/Users/adem/Desktop/uploads')));
-
+// Correction ici : Utilisation du bon chemin pour les fichiers statiques
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // Démarrer le serveur
 app.listen(port, () => {
   console.log(`Serveur en cours d'exécution à http://localhost:${port}`);
 });
 
-// Configuration de multer pour les uploads d'images
+// Configuration de multer pour les uploads d'images dans public/uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Chemin du dossier où les images seront stockées
+    cb(null, path.join(__dirname, 'public/uploads')); // Sauvegarde dans public/uploads à la racine
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Nom du fichier avec un timestamp
-  },
+    cb(null, file.originalname); // Sauvegarde avec le nom original
+  }
 });
 
 const upload = multer({ storage });
-app.use('/public/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // Route pour télécharger des images de produits
 app.post('/upload', upload.single('image'), (req, res) => {
@@ -55,6 +54,3 @@ app.post('/upload', upload.single('image'), (req, res) => {
     res.status(400).json({ error: 'Erreur lors de l\'upload de l\'image' });
   }
 });
-
-// Servir les fichiers statiques pour les images
-app.use('/uploads', express.static('uploads'));
