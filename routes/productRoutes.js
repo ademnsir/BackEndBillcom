@@ -8,6 +8,7 @@ router.post('/products', upload.fields([
   { name: 'image', maxCount: 1 },   // Image principale du produit
   { name: 'logoUrl', maxCount: 1 }  // Logo de la marque
 ]), productController.addProduct);
+app.use('/uploads', express.static('uploads')); // Serve the images from the 'uploads' directory
 
 // Autres routes produits
 router.get('/products', productController.getAllProducts);
