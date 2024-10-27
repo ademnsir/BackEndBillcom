@@ -26,7 +26,8 @@ app.use("/auth", AuthRoute);
 // Utilisation des routes pour les produits
 app.use("/tp/api", productRoutes);  // Définir un préfixe commun pour toutes les routes produits
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'C:/Users/adem/Desktop/uploads')));
+
 
 // Démarrer le serveur
 app.listen(port, () => {
