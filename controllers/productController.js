@@ -27,8 +27,8 @@ exports.addProduct = async (req, res) => {
         marque,
         dispo,
         promo,
-        type,  // Ajout du champ `type`
-        subcategory, // Ajout du champ `subcategory`
+        type, 
+        subcategory,
         image: req.files['image'][0].filename, // Sauvegarder le nom de fichier de l'image
         logoUrl: req.files['logoUrl'][0].filename, // Sauvegarder le nom de fichier du logo
         user: req.body.user ? { idUser: req.body.user.idUser } : undefined // Champ facultatif pour l'utilisateur
