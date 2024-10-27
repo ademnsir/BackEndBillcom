@@ -27,7 +27,7 @@ app.use("/auth", AuthRoute);
 app.use("/tp/api", productRoutes);  // Définir un préfixe commun pour toutes les routes produits
 
 // Correction ici : Utilisation du bon chemin pour les fichiers statiques
-app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+app.use('/uploads', express.static('public/uploads'));  // Ici, sans __dirname, le chemin est relatif à la racine du projet
 
 // Démarrer le serveur
 app.listen(port, () => {
@@ -37,7 +37,7 @@ app.listen(port, () => {
 // Configuration de multer pour les uploads d'images dans public/uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, 'public/uploads')); // Sauvegarde dans public/uploads à la racine
+    cb(null, 'public/uploads'); // Sauvegarde dans public/uploads sans __dirname
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname); // Sauvegarde avec le nom original
