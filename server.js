@@ -45,6 +45,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
+app.use('/public/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // Route pour télécharger des images de produits
 app.post('/upload', upload.single('image'), (req, res) => {
