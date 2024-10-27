@@ -5,6 +5,11 @@ const ProductSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
+  description: {
+    type: String,
+    required: true,
+  },
   image: {
     type: String, // Chemin de l'image stockée
     required: true,
@@ -31,7 +36,7 @@ const ProductSchema = new mongoose.Schema({
     required: true,
   },
 
-  
+
   logoUrl: {
     type: String,
     required: true, // URL du logo de la marque
