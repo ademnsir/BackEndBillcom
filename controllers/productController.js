@@ -10,7 +10,7 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
-/// Ajouter un produit
+// Ajouter un produit
 exports.addProduct = async (req, res) => {
   try {
     const { title, prix, marque, dispo, promo, type, subcategory } = req.body;
@@ -20,9 +20,9 @@ exports.addProduct = async (req, res) => {
       return res.status(400).json({ message: "Les images du produit et du logo sont requises" });
     }
 
-    // Récupérer les noms des fichiers image et logo
-    const imageFileName = req.files['image'][0].filename;
-    const logoFileName = req.files['logoUrl'][0].filename;
+    // Récupérer les noms des fichiers image et logo (vrais noms)
+    const imageFileName = req.files['image'][0].originalname;
+    const logoFileName = req.files['logoUrl'][0].originalname;
 
     // Créer un nouveau produit avec les données reçues et les noms de fichiers
     const product = new Product({
@@ -31,10 +31,10 @@ exports.addProduct = async (req, res) => {
       marque,
       dispo,
       promo,
-      type, 
+      type,
       subcategory,
-      image: imageFileName,  // Sauvegarder le nom de fichier de l'image
-      logoUrl: logoFileName, // Sauvegarder le nom de fichier du logo
+      image: imageFileName,  // Sauvegarder le vrai nom de fichier de l'image
+      logoUrl: logoFileName, // Sauvegarder le vrai nom de fichier du logo
       user: req.body.user ? { idUser: req.body.user.idUser } : undefined  // Optionnel : l'utilisateur qui a ajouté le produit
     });
 
