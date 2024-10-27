@@ -1,13 +1,18 @@
+const fs = require('fs');
 const multer = require('multer');
 const path = require('path');
-const os = require('os');
 
-// Utilisez le chemin vers votre bureau pour le stockage des images
+// Chemin absolu vers le dossier uploads sur le bureau
+const desktopUploadsDir = 'C:/Users/adem/Desktop/uploads'; // Remplacez par le bon chemin
+
+// Créer le dossier s'il n'existe pas
+if (!fs.existsSync(desktopUploadsDir)) {
+  fs.mkdirSync(desktopUploadsDir, { recursive: true });
+}
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // Le chemin vers votre dossier 'uploads' sur le bureau
-    const desktopUploadsDir = path.join(os.homedir(), 'Desktop', 'uploads');
-    cb(null, desktopUploadsDir);
+    cb(null, desktopUploadsDir); // Utiliser le chemin correct
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname)); // Renommer avec un timestamp pour éviter les conflits
