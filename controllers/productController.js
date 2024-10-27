@@ -13,7 +13,7 @@ exports.getAllProducts = async (req, res) => {
 // Ajouter un produit
 exports.addProduct = async (req, res) => {
   try {
-    const { title, prix, marque, dispo, promo, type, subcategory, description ,videoUrl ,shortDesc} = req.body;
+    const { title, prix, marque, dispo, promo, type, subcategory } = req.body;
 
     // Vérifier si les fichiers image et logo sont bien téléchargés
     if (!req.files || !req.files['image'] || !req.files['logoUrl'] || !req.files['img1'] || !req.files['img2'] || !req.files['img3'] || !req.files['img4']) {
@@ -21,28 +21,25 @@ exports.addProduct = async (req, res) => {
     }
 
     // Récupérer les noms des fichiers image et logo (vrais noms)
-    const imageFileName = req.files['image'][0].originalname;
-    const logoFileName = req.files['logoUrl'][0].originalname;
-    const img1FileName = req.files['img1'][0].originalname;
-    const img2FileName = req.files['img2'][0].originalname;
-    const img3FileName = req.files['img3'][0].originalname;
-    const img4FileName = req.files['img4'][0].originalname;
+    const imageFileName = req.files['image'][0].originalname.toLowerCase(); // Conversion en minuscule
+    const logoFileName = req.files['logoUrl'][0].originalname.toLowerCase(); // Conversion en minuscule
+    const img1FileName = req.files['img1'][0].originalname.toLowerCase();   // Conversion en minuscule
+    const img2FileName = req.files['img2'][0].originalname.toLowerCase();   // Conversion en minuscule
+    const img3FileName = req.files['img3'][0].originalname.toLowerCase();   // Conversion en minuscule
+    const img4FileName = req.files['img4'][0].originalname.toLowerCase();   // Conversion en minuscule
 
     // Créer un nouveau produit avec les données reçues et les noms de fichiers
     const product = new Product({
       title,
       prix,
-      marque,
+      marque,  // La marque peut être en majuscule ou minuscule dans la base de données
       dispo,
       promo,
       type,
       subcategory,
-      description, 
-      videoUrl,
-      shortDesc, // Ajouter la description ici
-      image: imageFileName,  // Sauvegarder le vrai nom de fichier de l'image principale
-      logoUrl: logoFileName, // Sauvegarder le vrai nom de fichier du logo
-      img1: img1FileName,    // Sauvegarder le nom des images supplémentaires
+      image: imageFileName,  // Sauvegarder en minuscule pour uniformité
+      logoUrl: logoFileName, // Sauvegarder en minuscule pour uniformité
+      img1: img1FileName,
       img2: img2FileName,
       img3: img3FileName,
       img4: img4FileName,
@@ -57,6 +54,7 @@ exports.addProduct = async (req, res) => {
     res.status(500).json({ message: "Erreur lors de l'ajout du produit", error });
   }
 };
+
 
 
   
