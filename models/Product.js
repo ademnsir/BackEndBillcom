@@ -66,9 +66,16 @@ const ProductSchema = new mongoose.Schema({
     required: true,
   },
   promo: {
-    type: Number, // Pourcentage de réduction
+    type: Number, 
     default: 0,
+    required: false,
   },
+
+  imgProduitenPromo: {
+    type: String, 
+    required: false,
+  },
+
   dateAdded: {
     type: Date,
     default: Date.now,
