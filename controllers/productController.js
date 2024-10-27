@@ -20,13 +20,16 @@ exports.addProduct = async (req, res) => {
       return res.status(400).json({ message: "Toutes les images du produit et le logo sont requis" });
     }
 
-    // Récupérer les noms des fichiers image et logo (vrais noms)
-    const imageFileName = req.files['image'][0].originalname.toLowerCase(); // Conversion en minuscule
-    const logoFileName = req.files['logoUrl'][0].originalname.toLowerCase(); // Conversion en minuscule
-    const img1FileName = req.files['img1'][0].originalname.toLowerCase();   // Conversion en minuscule
-    const img2FileName = req.files['img2'][0].originalname.toLowerCase();   // Conversion en minuscule
-    const img3FileName = req.files['img3'][0].originalname.toLowerCase();   // Conversion en minuscule
-    const img4FileName = req.files['img4'][0].originalname.toLowerCase();   // Conversion en minuscule
+    // Récupérer les noms des fichiers image et logo (vrais noms en minuscule)
+    const imageFileName = req.files['image'][0].originalname.toLowerCase();
+    const logoFileName = req.files['logoUrl'][0].originalname.toLowerCase();
+    const img1FileName = req.files['img1'][0].originalname.toLowerCase();
+    const img2FileName = req.files['img2'][0].originalname.toLowerCase();
+    const img3FileName = req.files['img3'][0].originalname.toLowerCase();
+    const img4FileName = req.files['img4'][0].originalname.toLowerCase();
+
+    // Logique de promo: Si le champ 'promo' n'est pas fourni, le produit n'est pas en promotion (promo = 0)
+    const productPromo = promo ? promo : 0;
 
     // Créer un nouveau produit avec les données reçues et les noms de fichiers
     const product = new Product({
@@ -34,7 +37,7 @@ exports.addProduct = async (req, res) => {
       prix,
       marque,  // La marque peut être en majuscule ou minuscule dans la base de données
       dispo,
-      promo,
+      promo: productPromo,  // Assurez-vous que promo est soit une valeur fournie soit 0 par défaut
       type,
       subcategory,
       image: imageFileName,  // Sauvegarder en minuscule pour uniformité
