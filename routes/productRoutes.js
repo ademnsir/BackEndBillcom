@@ -10,7 +10,8 @@ router.post('/products', upload.fields([
   { name: 'img1', maxCount: 1 },    // Images supplémentaires
   { name: 'img2', maxCount: 1 },
   { name: 'img3', maxCount: 1 },
-  { name: 'img4', maxCount: 1 }
+  { name: 'img4', maxCount: 1 },
+  { name: 'imgProduitenPromo', maxCount: 1 },
 ]), productController.addProduct);
 
 
