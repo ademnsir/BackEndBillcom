@@ -2,35 +2,30 @@ const Review = require('../models/review'); // Assuming you have a Review model
 
 // Add a new review
 exports.addReview = async (req, res) => {
-  try {
-    const { name, comment, priceRating, valueRating, qualityRating, user, product, date } = req.body;
+    try {
+        const { name, comment, priceRating, valueRating, qualityRating, user, product } = req.body;
 
-    // Handle file uploads if provided
-    const imgreview1 = req.files['imgreview1'] ? req.files['imgreview1'][0].originalname.toLowerCase() : null;
-    const imgreview2 = req.files['imgreview2'] ? req.files['imgreview2'][0].originalname.toLowerCase() : null;
+        // Create new review object
+        const review = new Review({
+            name,
+            comment,
+            priceRating,
+            valueRating,
+            qualityRating,
+            user,
+            product,
+            imgreview1: req.files['imgreview1'] ? req.files['imgreview1'][0].filename : null,
+            imgreview2: req.files['imgreview2'] ? req.files['imgreview2'][0].filename : null,
+        });
 
-    // Create a new review object
-    const newReview = new Review({
-      name,
-      comment,
-      priceRating,
-      valueRating,
-      qualityRating,
-      user: { idUser: user.idUser }, // assuming user is passed as an object
-      product: { id: product.id },   // assuming product is passed as an object
-      date,
-      imgreview1,
-      imgreview2,
-    });
-
-    // Save the review to the database
-    await newReview.save();
-
-    res.status(201).json({ message: 'Review added successfully', review: newReview });
-  } catch (error) {
-    res.status(500).json({ message: 'Error adding review', error });
-  }
+        // Save the review to the database
+        await review.save();
+        res.status(201).json({ message: 'Review added successfully', review });
+    } catch (error) {
+        res.status(500).json({ message: 'Error adding review', error });
+    }
 };
+
 
 // Get reviews for a specific product
 exports.getReviewsByProduct = async (req, res) => {
