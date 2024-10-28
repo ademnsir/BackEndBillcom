@@ -7,7 +7,8 @@ const path = require('path');
 const app = express();
 const port = 3001;
 const AuthRoute = require("./routes/auth");
-const productRoutes = require("./routes/productRoutes"); // Importer les routes des produits
+const productRoutes = require("./routes/productRoutes"); 
+const reviewRoutes = require('./routes/reviewRoutes');// Importer les routes des produits
 
 connectDB();
 
@@ -26,7 +27,7 @@ app.use("/auth", AuthRoute);
 // Utilisation des routes pour les produits
 app.use("/tp/api", productRoutes);  // Définir un préfixe commun pour toutes les routes produits
 
-const reviewRoutes = require('./routes/reviews');
+
 app.use('/tp/api/reviews', reviewRoutes);
 
 // Correction ici : Utilisation du bon chemin pour les fichiers statiques
