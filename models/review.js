@@ -1,3 +1,5 @@
+// review.model.js
+
 const mongoose = require('mongoose');
 
 const ReviewSchema = new mongoose.Schema({
@@ -6,12 +8,11 @@ const ReviewSchema = new mongoose.Schema({
     ref: 'Product',
     required: true,
   },
-  userid: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
-  
   name: {
     type: String,
     required: true,
