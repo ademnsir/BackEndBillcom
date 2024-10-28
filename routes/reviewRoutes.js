@@ -12,7 +12,7 @@ router.post('/add', upload.fields([
 
 
 // Les autres routes de gestion des avis
-router.get('/:productId', reviewController.getReviewsByProduct);
+router.get('/getbyid/:productId', reviewController.getReviewsByProduct);
 router.get('/:reviewId', reviewController.getReviewById);
 router.put('/:reviewId', reviewController.updateReview);
 router.delete('/:reviewId', reviewController.deleteReview);
