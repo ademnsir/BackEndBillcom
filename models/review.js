@@ -10,7 +10,7 @@ const ReviewSchema = new mongoose.Schema({
     idUser: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: false,
+      required: true,
     },
     nom: String,
     profilePicture: String,
