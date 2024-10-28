@@ -8,6 +8,9 @@ exports.addReview = async (req, res) => {
         const { name, comment, priceRating, valueRating, qualityRating, user, product } = req.body;
         console.log(req.body); // Pour vérifier que les données sont bien reçues
 
+        const imgreview1 = req.files['imgreview1'] ? req.files['imgreview1'][0].filename : null;
+        const imgreview2 = req.files['imgreview2'] ? req.files['imgreview2'][0].filename : null;
+
         // Créer un nouvel avis avec les données fournies
         const review = new Review({
             name,
@@ -17,6 +20,8 @@ exports.addReview = async (req, res) => {
             qualityRating,
             user,
             product,
+            imgreview1,
+            imgreview2
         });
 
         await review.save();
@@ -26,6 +31,7 @@ exports.addReview = async (req, res) => {
         res.status(500).json({ message: 'Error adding review', error });
     }
 };
+
 
 // Get reviews for a specific product
 exports.getReviewsByProduct = async (req, res) => {

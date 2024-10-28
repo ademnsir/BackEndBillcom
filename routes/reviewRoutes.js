@@ -16,7 +16,7 @@ const upload = multer({
 });
 
 // Route to handle review submission with image uploads
-router.post('/add', reviewController.addReview);
+router.post('/add', upload.fields([{ name: 'imgreview1', maxCount: 1 }, { name: 'imgreview2', maxCount: 1 }]), reviewController.addReview);
 
 
 // Route to get reviews by product ID
