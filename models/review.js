@@ -37,9 +37,11 @@ const ReviewSchema = new mongoose.Schema({
   },
   imgreview1: {
     type: String,
+    required: false,
   },
   imgreview2: {
     type: String,
+    required: false,
   },
   date: {
     type: Date,
