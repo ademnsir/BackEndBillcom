@@ -1,48 +1,93 @@
-const Review = require('../models/review');
-const Product = require('../models/product');
+const Review = require('../models/review'); // Assuming you have a Review model
 
+// Add a new review
 exports.addReview = async (req, res) => {
   try {
-    const { name, comment, priceRating, valueRating, qualityRating } = req.body;
+    const { name, comment, priceRating, valueRating, qualityRating, user, product, date } = req.body;
 
-    const user = req.body.user; // Assuming you pass user details from the frontend
-    const productId = req.body.product.id; // Assuming you pass the product ID from the frontend
+    // Handle file uploads if provided
+    const imgreview1 = req.files['imgreview1'] ? req.files['imgreview1'][0].originalname.toLowerCase() : null;
+    const imgreview2 = req.files['imgreview2'] ? req.files['imgreview2'][0].originalname.toLowerCase() : null;
 
-    if (!user || !productId) {
-      return res.status(400).json({ message: 'User or product ID is missing.' });
-    }
-
-    const review = new Review({
+    // Create a new review object
+    const newReview = new Review({
       name,
       comment,
       priceRating,
       valueRating,
       qualityRating,
-      product: productId,
-      user: {
-        idUser: user.idUser,
-        nom: user.nom,
-        profilePicture: user.profilePicture,
-      },
+      user: { idUser: user.idUser }, // assuming user is passed as an object
+      product: { id: product.id },   // assuming product is passed as an object
+      date,
+      imgreview1,
+      imgreview2,
     });
 
-    // Handle image upload if provided
-    if (req.files && req.files.imgreview1) {
-      review.imgreview1 = req.files.imgreview1[0].filename; // Assuming image files are passed as 'imgreview1'
-    }
-    if (req.files && req.files.imgreview2) {
-      review.imgreview2 = req.files.imgreview2[0].filename; // Assuming image files are passed as 'imgreview2'
-    }
+    // Save the review to the database
+    await newReview.save();
 
-    await review.save();
-    
-    // Add the review to the product
-    await Product.findByIdAndUpdate(productId, {
-      $push: { reviews: review._id },
-    });
-
-    res.status(201).json({ message: 'Review added successfully!', review });
+    res.status(201).json({ message: 'Review added successfully', review: newReview });
   } catch (error) {
     res.status(500).json({ message: 'Error adding review', error });
+  }
+};
+
+// Get reviews for a specific product
+exports.getReviewsByProduct = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const reviews = await Review.find({ 'product.id': productId });
+    res.status(200).json(reviews);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching reviews', error });
+  }
+};
+
+// Get a specific review by ID
+exports.getReviewById = async (req, res) => {
+  try {
+    const { reviewId } = req.params;
+    const review = await Review.findById(reviewId);
+    res.status(200).json(review);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching review', error });
+  }
+};
+
+// Update a review
+exports.updateReview = async (req, res) => {
+  try {
+    const { reviewId } = req.params;
+    const { name, comment, priceRating, valueRating, qualityRating, date } = req.body;
+
+    // Handle file uploads if provided
+    const imgreview1 = req.files['imgreview1'] ? req.files['imgreview1'][0].originalname.toLowerCase() : null;
+    const imgreview2 = req.files['imgreview2'] ? req.files['imgreview2'][0].originalname.toLowerCase() : null;
+
+    const updatedReview = await Review.findByIdAndUpdate(reviewId, {
+      name,
+      comment,
+      priceRating,
+      valueRating,
+      qualityRating,
+      date,
+      imgreview1: imgreview1 || req.body.imgreview1, // Preserve original if no new image
+      imgreview2: imgreview2 || req.body.imgreview2, // Preserve original if no new image
+    }, { new: true });
+
+    res.status(200).json({ message: 'Review updated successfully', review: updatedReview });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating review', error });
+  }
+};
+
+// Delete a review
+exports.deleteReview = async (req, res) => {
+  try {
+    const { reviewId } = req.params;
+    await Review.findByIdAndDelete(reviewId);
+    res.status(200).json({ message: 'Review deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting review', error });
   }
 };
