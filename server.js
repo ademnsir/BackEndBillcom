@@ -31,7 +31,9 @@ app.use("/tp/api", productRoutes);  // Définir un préfixe commun pour toutes l
 app.use('/tp/api/reviews', reviewRoutes);
 
 // Correction ici : Utilisation du bon chemin pour les fichiers statiques
-app.use('/uploads', express.static('public/uploads'));  // Ici, sans __dirname, le chemin est relatif à la racine du projet
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));  // Assurez-vous que le chemin est correct
+
+
 
 // Démarrer le serveur
 app.listen(port, () => {
