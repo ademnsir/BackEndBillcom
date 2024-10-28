@@ -26,6 +26,9 @@ app.use("/auth", AuthRoute);
 // Utilisation des routes pour les produits
 app.use("/tp/api", productRoutes);  // Définir un préfixe commun pour toutes les routes produits
 
+const reviewRoutes = require('./routes/reviews');
+app.use('/tp/api/reviews', reviewRoutes);
+
 // Correction ici : Utilisation du bon chemin pour les fichiers statiques
 app.use('/uploads', express.static('public/uploads'));  // Ici, sans __dirname, le chemin est relatif à la racine du projet
 
