@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const reviewController = require('../controllers/reviewController');
+const reviewController = require('../controllers/reviewsController');
 
 // Multer configuration for handling image uploads
 const upload = multer({
