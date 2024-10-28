@@ -14,8 +14,6 @@ exports.addReview = async (req, res) => {
         qualityRating,
         user,
         product,
-        imgreview1: req.files['imgreview1'] ? req.files['imgreview1'][0].filename : null,
-        imgreview2: req.files['imgreview2'] ? req.files['imgreview2'][0].filename : null,
       });
       
       await review.save();

@@ -16,10 +16,8 @@ const upload = multer({
 });
 
 // Route to handle review submission with image uploads
-router.post('/add', upload.fields([
-    { name: 'imgreview1', maxCount: 1 },
-    { name: 'imgreview2', maxCount: 1 }
-]), reviewController.addReview);
+router.post('/add', reviewController.addReview);
+
 
 // Route to get reviews by product ID
 router.get('/:productId', reviewController.getReviewsByProduct);
@@ -28,10 +26,7 @@ router.get('/:productId', reviewController.getReviewsByProduct);
 router.get('/:reviewId', reviewController.getReviewById);
 
 // Route to update a review
-router.put('/:reviewId', upload.fields([
-    { name: 'imgreview1', maxCount: 1 },
-    { name: 'imgreview2', maxCount: 1 }
-]), reviewController.updateReview);
+router.put('/:reviewId',reviewController.updateReview);
 
 // Route to delete a review
 router.delete('/:reviewId', reviewController.deleteReview);
