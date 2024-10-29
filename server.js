@@ -8,30 +8,41 @@ const app = express();
 const port = 3001;
 const AuthRoute = require("./routes/auth");
 const productRoutes = require("./routes/productRoutes"); 
-const reviewRoutes = require('./routes/reviewRoutes');// Importer les routes des produits
+const reviewRoutes = require('./routes/reviewRoutes');
+const orderRoutes = require('./routes/orderRoutes'); 
+const paymentRoutes = require('./routes/paymentRoutes');
+
 
 connectDB();
 
-// Middleware
+
 app.use(cors());
 app.use(express.json());
 
-// Route de base
+
 app.get('/', (req, res) => {
   res.send('Le serveur est en marche');
 });
 
-// Utilisation des routes pour l'authentification
+
 app.use("/auth", AuthRoute);
 
-// Utilisation des routes pour les produits
-app.use("/tp/api", productRoutes);  // Définir un préfixe commun pour toutes les routes produits
+
+app.use("/tp/api", productRoutes);  
 
 
 app.use('/tp/api/reviews', reviewRoutes);
 
-// Correction ici : Utilisation du bon chemin pour les fichiers statiques
-app.use('/uploads', express.static('public/uploads'));  // Ici, sans __dirname, le chemin est relatif à la racine du projet
+
+app.use('/tp/api/orders', orderRoutes);
+
+
+app.use('/tp/api/payment', paymentRoutes);
+
+
+
+app.use('/uploads', express.static('public/uploads')); 
+
 
 
 // Démarrer le serveur

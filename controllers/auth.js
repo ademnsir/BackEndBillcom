@@ -151,3 +151,21 @@ exports.signIn = async (req, res, next) => {
         res.status(500).json({ success: false, message: "Erreur lors de la connexion" });
     }
 };
+
+
+exports.updateUser = async (req, res) => {
+    const { idUser, nom, prenom, email, adresse, ville, telephone, codepostal } = req.body;
+  
+    try {
+      // Find user and update their info
+      const updatedUser = await User.findByIdAndUpdate(
+        idUser,
+        { nom, prenom, email, adresse, ville, telephone, codepostal },
+        { new: true }
+      );
+  
+      res.status(200).json(updatedUser);
+    } catch (error) {
+      res.status(500).json({ error: 'Error updating user info' });
+    }
+  };
