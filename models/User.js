@@ -24,15 +24,19 @@ const UserSchema = new mongoose.Schema({
   },
   pays: {
     type: String,
+    required: true,
   },
   adresse: {
     type: String,
+    required: true,
   },
   codePostal: {
     type: String,
+    required: true,
   },
   telephone: {
     type: String,
+    required: true,
   },
   checkbox: {
     type: Boolean,
@@ -44,9 +48,11 @@ const UserSchema = new mongoose.Schema({
   },
   genre: {
     type: String,
+    required: true,
   },
   dateNaissance: {
     type: String,
+    required: true,
   }
 });
 
