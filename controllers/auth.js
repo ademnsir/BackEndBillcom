@@ -20,6 +20,9 @@ exports.register = async (req, res, next) => {
         type
     } = req.body;
 
+    // Ajoutez un console.log pour vérifier les données reçues
+    console.log("Données reçues pour l'enregistrement :", req.body);
+
     try {
         // Vérifier si l'utilisateur existe déjà
         const existingUser = await User.findOne({ email });
@@ -42,23 +45,26 @@ exports.register = async (req, res, next) => {
             email,
             password: hashedPassword, // Utiliser le mot de passe haché
             confirmPassword: hashedPassword, // Hacher aussi la confirmation du mot de passe
-            pays,
-            adresse,
-            codePostal,
-            telephone,
+            pays: pays || "", // Si `pays` n'est pas fourni, utilisez une chaîne vide
+            adresse: adresse || "",
+            codePostal: codePostal || "",
+            telephone: telephone || "",
             genre,
             dateNaissance,
-            checkbox,
+            checkbox: checkbox !== undefined ? checkbox : true, // Utilisez `true` par défaut si `checkbox` n'est pas défini
             type
         });
 
+        // Vérifiez les données de l'utilisateur après la création
+        console.log("Utilisateur créé avec succès :", user);
+
         res.status(201).json({ success: true, message: "Utilisateur ajouté avec succès", user });
     } catch (error) {
-        console.error(error); 
-        next(error);
-        res.status(400).json({ success: false, message: "Erreur lors de l'ajout de l'utilisateur" });
+        console.error("Erreur lors de l'ajout de l'utilisateur :", error);
+        res.status(500).json({ success: false, message: "Erreur lors de l'ajout de l'utilisateur" });
     }
 };
+
 
 // Mise à jour des informations utilisateur
 exports.updateUserByEmail = async (req, res, next) => {
