@@ -148,7 +148,11 @@ exports.signIn = async (req, res, next) => {
                 email: user.email,
                 type: user.type,
                 genre: user.genre,
-                dateNaissance: user.dateNaissance
+                dateNaissance: user.dateNaissance,
+                pays: user.pays,
+                adresse: user.adresse,
+                codePostal: user.codePostal,
+                telephone: user.telephone
             }
         });
     } catch (error) {
