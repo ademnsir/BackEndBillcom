@@ -5,13 +5,17 @@ exports.createCheckoutSession = async (req, res) => {
     try {
         const { items, address } = req.body;
 
+        if (!items || !Array.isArray(items)) {
+            return res.status(400).json({ error: "Items must be provided as an array" });
+        }
+
         const line_items = items.map(item => {
             return {
                 price_data: {
-                    currency: 'usd', // Use your currency
+                    currency: 'usd',
                     product_data: {
                         name: item.name,
-                        description: item.description,
+                        description: item.description || 'No description', // Fallback if description is missing
                         images: [item.image], // Use the product's image
                     },
                     unit_amount: Math.round(item.price * 100), // Stripe accepts amount in cents
@@ -25,10 +29,10 @@ exports.createCheckoutSession = async (req, res) => {
             payment_method_types: ['card'], // Only card payments
             line_items,
             mode: 'payment',
-            success_url: 'http://localhost:3000/paymentSucces', // Define your success URL
-            cancel_url: 'http://localhost:3000/paymentFailed', // Define your cancel URL
+            success_url: 'http://localhost:3000/paymentSucces',
+            cancel_url: 'http://localhost:3000/paymentFailed',
             shipping_address_collection: {
-                allowed_countries: ['US', 'CA', 'FR'], // Example list of countries
+                allowed_countries: ['US', 'CA', 'FR'],
             },
             shipping_options: [
                 {
