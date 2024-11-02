@@ -126,7 +126,7 @@ exports.signIn = async (req, res, next) => {
 
     try {
         // Vérifier si l'utilisateur existe
-        const user = await User.findOne({ email: email.toLowerCase() });
+        const user = await User.findOne({ email: email.toLowerCase() }).select('nom prenom email profilePicture genre dateNaissance pays adresse codePostal telephone type password');
         if (!user) {
             return res.status(404).json({ success: false, message: "Utilisateur non trouvé" });
         }
@@ -138,29 +138,18 @@ exports.signIn = async (req, res, next) => {
         }
 
         // Renvoyer les informations utilisateur sans mot de passe
+        user.password = undefined;
         res.status(200).json({
             success: true,
             message: "Connexion réussie",
-            user: {
-                id: user._id,
-                nom: user.nom,
-                prenom: user.prenom,
-                email: user.email,
-                type: user.type,
-                genre: user.genre,
-                dateNaissance: user.dateNaissance,
-                pays: user.pays,
-                adresse: user.adresse,
-                codePostal: user.codePostal,
-                telephone: user.telephone
-            }
+            user
         });
     } catch (error) {
-        console.error(error);
-        next(error);
+        console.error("Erreur lors de la connexion :", error);
         res.status(500).json({ success: false, message: "Erreur lors de la connexion" });
     }
 };
+
 
 
 exports.updateUser = async (req, res) => {
