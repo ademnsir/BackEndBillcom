@@ -42,16 +42,25 @@ exports.addReview = async (req, res) => {
 exports.getReviewsByProduct = async (req, res) => {
   try {
     const { productId } = req.params;
-    // Utiliser `populate` pour inclure les informations de l'utilisateur
-    const reviews = await Review.find({ product: productId }).populate('user', 'nom prenom profilePicture');
+    const reviews = await Review.find({ product: productId }); // Correction de la requête MongoDB et ajout de `populate`
     res.status(200).json(reviews);
   } catch (error) {
-    console.error("Error fetching reviews: ", error);
     res.status(500).json({ message: 'Error fetching reviews', error });
   }
 };
 
 
+// exports.getReviewsByProduct = async (req, res) => {
+//   try {
+//     const { productId } = req.params;
+//     // Utiliser `populate` pour inclure les informations de l'utilisateur
+//     const reviews = await Review.find({ product: productId }).populate('user', 'nom prenom profilePicture');
+//     res.status(200).json(reviews);
+//   } catch (error) {
+//     console.error("Error fetching reviews: ", error);
+//     res.status(500).json({ message: 'Error fetching reviews', error });
+//   }
+// };
 // Get a specific review by ID
 exports.getReviewById = async (req, res) => {
   try {
