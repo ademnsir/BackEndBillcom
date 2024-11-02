@@ -10,9 +10,7 @@ router.post("/register", upload.fields([
 ]), AuthController.register);
 
 // Route pour la mise à jour de l'image de profil de l'utilisateur
-router.post("/updateProfilePicture", upload.fields([
-  { name: 'profilePicture', maxCount: 1 }  // Image de profil mise à jour
-]), AuthController.updateProfilePicture);
+
 
 // Autres routes utilisateurs
 router.post("/update", AuthController.updateUserByEmail);
