@@ -32,15 +32,13 @@ exports.register = async (req, res, next) => {
 
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        // Vérifier si l'image de profil est bien téléchargée
-        if (!req.files || !req.files['profilePicture']) {
-            return res.status(400).json({ message: "L'image de profil est requise" });
+        // Gérer l'image de profil (optionnelle)
+        let profilePictureFileName = null;
+        if (req.files && req.files['profilePicture']) {
+            profilePictureFileName = req.files['profilePicture'][0].originalname.toLowerCase();
         }
 
-        // Récupérer le nom du fichier de l'image de profil (en minuscule)
-        const profilePictureFileName = req.files['profilePicture'][0].originalname.toLowerCase();
-
-        // Créer un nouvel utilisateur avec les données reçues et le nom du fichier de l'image
+        // Créer un nouvel utilisateur avec ou sans l'image de profil
         const user = await User.create({
             nom,
             prenom,
@@ -64,6 +62,7 @@ exports.register = async (req, res, next) => {
         res.status(500).json({ success: false, message: "Erreur lors de l'ajout de l'utilisateur" });
     }
 };
+
 
 // Mise à jour des informations utilisateur
 exports.updateUserByEmail = async (req, res, next) => {
