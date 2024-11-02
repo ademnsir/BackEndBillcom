@@ -20,43 +20,43 @@ exports.register = async (req, res, next) => {
         type
     } = req.body;
 
-    // Ajoutez un console.log pour vérifier les données reçues
-    console.log("Données reçues pour l'enregistrement :", req.body);
-
     try {
-        // Vérifier si l'utilisateur existe déjà
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(200).json({ success: true, message: "Utilisateur déjà enregistré", user: existingUser });
         }
 
-        // Vérification si le mot de passe et la confirmation correspondent
         if (password !== confirmPassword) {
             return res.status(400).json({ success: false, message: "Les mots de passe ne correspondent pas" });
         }
 
-        // Hachage du mot de passe
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        // Création de l'utilisateur
+        // Vérifier si l'image de profil est bien téléchargée
+        if (!req.files || !req.files['profilePicture']) {
+            return res.status(400).json({ message: "L'image de profil est requise" });
+        }
+
+        // Récupérer le nom du fichier de l'image de profil (en minuscule)
+        const profilePictureFileName = req.files['profilePicture'][0].originalname.toLowerCase();
+
+        // Créer un nouvel utilisateur avec les données reçues et le nom du fichier de l'image
         const user = await User.create({
             nom,
             prenom,
             email,
-            password: hashedPassword, // Utiliser le mot de passe haché
-            confirmPassword: hashedPassword, // Hacher aussi la confirmation du mot de passe
-            pays: pays || "", // Si `pays` n'est pas fourni, utilisez une chaîne vide
+            password: hashedPassword,
+            confirmPassword: hashedPassword,
+            pays: pays || "",
             adresse: adresse || "",
             codePostal: codePostal || "",
             telephone: telephone || "",
             genre,
             dateNaissance,
-            checkbox: checkbox !== undefined ? checkbox : true, // Utilisez `true` par défaut si `checkbox` n'est pas défini
-            type
+            checkbox: checkbox !== undefined ? checkbox : true,
+            type,
+            profilePicture: profilePictureFileName
         });
-
-        // Vérifiez les données de l'utilisateur après la création
-        console.log("Utilisateur créé avec succès :", user);
 
         res.status(201).json({ success: true, message: "Utilisateur ajouté avec succès", user });
     } catch (error) {
