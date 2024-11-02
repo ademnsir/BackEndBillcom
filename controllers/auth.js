@@ -65,7 +65,6 @@ exports.register = async (req, res, next) => {
     }
 };
 
-
 // Mise à jour des informations utilisateur
 exports.updateUserByEmail = async (req, res, next) => {
     const { email, nom, prenom, dateNaissance, telephone, adresse, password } = req.body; 
@@ -93,8 +92,7 @@ exports.updateUserByEmail = async (req, res, next) => {
 
         res.status(200).json({ success: true, message: "Utilisateur mis à jour avec succès", user: existingUser });
     } catch (error) {
-        console.error(error);
-        next(error);
+        console.error("Erreur lors de la mise à jour de l'utilisateur :", error);
         res.status(500).json({ success: false, message: "Erreur lors de la mise à jour de l'utilisateur" });
     }
 };
@@ -104,23 +102,20 @@ exports.getUserByEmail = async (req, res, next) => {
     const { email } = req.body; 
 
     try {
-        const user = await User.findOne({ email: email.toLowerCase() });
+        const user = await User.findOne({ email: email.toLowerCase() }).select('nom prenom email profilePicture genre dateNaissance pays adresse codePostal telephone type');
         
         if (!user) {
             return res.status(404).json({ success: false, message: "Utilisateur non trouvé" });
         }
 
-        user.password = undefined; // Ne pas renvoyer le mot de passe dans la réponse
-
         res.status(200).json({ success: true, user });
     } catch (error) {
-        console.error(error);
-        next(error);
+        console.error("Erreur lors de la récupération de l'utilisateur :", error);
         res.status(500).json({ success: false, message: "Erreur lors de la récupération de l'utilisateur" });
     }
 };
 
-
+// Connexion utilisateur
 exports.signIn = async (req, res, next) => {
     const { email, password } = req.body;
 
@@ -150,13 +145,11 @@ exports.signIn = async (req, res, next) => {
     }
 };
 
-
-
+// Mise à jour utilisateur par ID
 exports.updateUser = async (req, res) => {
     const { idUser, nom, prenom, email, adresse, ville, telephone, codepostal } = req.body;
   
     try {
-      // Find user and update their info
       const updatedUser = await User.findByIdAndUpdate(
         idUser,
         { nom, prenom, email, adresse, ville, telephone, codepostal },
@@ -165,25 +158,58 @@ exports.updateUser = async (req, res) => {
   
       res.status(200).json(updatedUser);
     } catch (error) {
-      res.status(500).json({ error: 'Error updating user info' });
+      console.error("Erreur lors de la mise à jour de l'utilisateur :", error);
+      res.status(500).json({ error: 'Erreur lors de la mise à jour des informations utilisateur' });
     }
-  };
+};
 
-
-  exports.getUserById = async (req, res) => {
+// Récupération d'un utilisateur par ID
+exports.getUserById = async (req, res) => {
     try {
       const userId = req.params.id;
-  
-      // Find the user by ID
-      const user = await User.findById(userId);
+      const user = await User.findById(userId).select('nom prenom email profilePicture genre dateNaissance pays adresse codePostal telephone type');
   
       if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: 'Utilisateur non trouvé' });
       }
   
-      // Return the user data
       res.status(200).json(user);
     } catch (error) {
-      res.status(500).json({ error: 'Error fetching user data' });
+      console.error("Erreur lors de la récupération de l'utilisateur :", error);
+      res.status(500).json({ error: 'Erreur lors de la récupération des données utilisateur' });
     }
-  };
+};
+
+
+
+// Mise à jour de l'image de profil
+exports.updateProfilePicture = async (req, res) => {
+    try {
+        const userId = req.params.id;
+
+        // Vérifiez si un fichier est téléchargé
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: "Aucune image téléchargée" });
+        }
+
+        // Récupérer le nom du fichier
+        const profilePictureFileName = req.file.filename;
+
+        // Mettre à jour l'utilisateur avec le nouveau nom de fichier
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { profilePicture: profilePictureFileName },
+            { new: true } // Retourner l'utilisateur mis à jour
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ success: false, message: "Utilisateur non trouvé" });
+        }
+
+        res.status(200).json({ success: true, message: "Image de profil mise à jour avec succès", fileName: profilePictureFileName });
+    } catch (error) {
+        console.error("Erreur lors de la mise à jour de l'image de profil :", error);
+        res.status(500).json({ success: false, message: "Erreur lors de la mise à jour de l'image de profil" });
+    }
+};
+

@@ -18,5 +18,7 @@ router.get("/getuser", AuthController.getUserByEmail);
 router.post("/sign-in", AuthController.signIn);
 router.put("/updateUser", AuthController.updateUser);
 router.get("/getUserById/:id", AuthController.getUserById);
+router.post("/uploadProfilePicture/:id", upload.single('profile_picture'), AuthController.updateProfilePicture);
+
 
 module.exports = router;
