@@ -1,7 +1,7 @@
 // review.controller.js
 
 const Review = require('../models/review');
-
+const User = require('../models/user'); // Importez le modèle `User`
 // Add a new review
 exports.addReview = async (req, res) => {
     try {
