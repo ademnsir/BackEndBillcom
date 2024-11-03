@@ -3,21 +3,16 @@ const mongoose = require("mongoose");
 const UserSchema = new mongoose.Schema({
   nom: {
     type: String,
-    required: true, // Assurez-vous que le champ est obligatoire si nécessaire
+    required: true,
   },
   prenom: {
     type: String,
     required: true,
   },
-
-
   profilePicture: {
     type: String,
     required: false,
   },
-
-
-
   password: {
     type: String,
     required: true,
@@ -25,7 +20,7 @@ const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true, // L'email doit être unique
+    unique: true,
   },
   confirmPassword: {
     type: String,
@@ -49,11 +44,11 @@ const UserSchema = new mongoose.Schema({
   },
   checkbox: {
     type: Boolean,
-    default: true, // Par défaut à true si coché
+    default: true,
   },
   type: {
     type: String,
-    default: "Utilisateur", // Par défaut à "Utilisateur"
+    default: "Utilisateur",
   },
   genre: {
     type: String,
@@ -68,8 +63,7 @@ const UserSchema = new mongoose.Schema({
 UserSchema.pre('save', async function (next) {
   try {
     if (!this.id) {
-      // Générez un identifiant unique si celui-ci n'est pas déjà défini
-      const count = await mongoose.model('user').countDocuments();
+      const count = await mongoose.model('User').countDocuments(); // Correction ici
       this.id = count + 1;
     }
     next();
@@ -78,5 +72,5 @@ UserSchema.pre('save', async function (next) {
   }
 });
 
-const User = mongoose.model("user", UserSchema);
+const User = mongoose.model("User", UserSchema); // Correction ici
 module.exports = User;
