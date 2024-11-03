@@ -41,15 +41,20 @@ exports.addReview = async (req, res) => {
 exports.getReviewsByProduct = async (req, res) => {
   try {
     const { productId } = req.params;
+    console.log("Fetching reviews for product ID:", productId); // Log pour vérifier l'ID du produit
+
     // Utiliser `populate` pour inclure les informations complètes de l'utilisateur
     const reviews = await Review.find({ product: productId })
-      .populate('user', 'nom prenom profilePicture'); // Assurez-vous que ces champs existent dans le modèle `User`
+      .populate('user', 'nom prenom profilePicture');
+    
+    console.log("Reviews fetched:", reviews); // Log pour vérifier les avis récupérés
     res.status(200).json(reviews);
   } catch (error) {
-    console.error("Error fetching reviews: ", error);
+    console.error("Error fetching reviews: ", error); // Log d'erreur détaillé
     res.status(500).json({ message: 'Error fetching reviews', error });
   }
 };
+
 
 
 // exports.getReviewsByProduct = async (req, res) => {
