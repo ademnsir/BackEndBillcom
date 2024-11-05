@@ -29,7 +29,7 @@ exports.createCheckoutSession = async (req, res) => {
             payment_method_types: ['card'], // Only card payments
             line_items,
             mode: 'payment',
-            success_url: 'http://localhost:5173/store?type=all',
+            success_url: 'https://techgadgetstn.netlify.app/store?type=all',
             cancel_url: 'http://localhost:3000/paymentFailed',
             shipping_address_collection: {
                 allowed_countries: ['US', 'CA', 'FR'],
